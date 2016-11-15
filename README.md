@@ -3,18 +3,52 @@ This repository will describe the steps for getting started with DropWizard, as 
 
 ## Introduction
 DropWizard is a popular platform for implementing REST web services in Java.  DropWizard contains the following components (amongst others):
+
         * Jetty for HTTP support
         * [Jersey](http://www.eclipse.org/jetty/) for Java Rest support 
         * Jackson for Java to JSON conversion
         * [Metrics](http://metrics.codahale.com/) library for production monitoring
 
+The final code is located in the DWOnAzure directory in this repository.
+
 ## Initial setup
+
 1. DropWizard leverages the Maven build tool - if you like another one (for example, Gradle) you can use that, but you'll have to figure that out yourself.  To get started, you'll have to install Maven on your development machine. Reference the [Maven home page](http://maven.apache.org) for instructions.
 
 1. We need to create a development directory.  In this guide, I'll be using `c:\dw` as my development directory, but you can use whatever you'd like.  Go to this directory.  
 1. We are going to generate an initial DropWizard application using maven with this command:
     ```CMD
     mvn archetype:generate  -DgroupId=com.dwonazure  -DartifactId=DWOnAzure  -Dname=DWOnAzure  -Dpackage=com.dwonazure  -DarchetypeGroupId=io.dropwizard.archetypes  -DarchetypeArtifactId=java-simple  -DinteractiveMode=false
+    ```
+1. Create the greeting object that the service will return.  Create `DwOnAzure\src\main\java\com\dwonazure\core\Greeting.java` with this code:
+    ```Java
+    package com.dwonazure.core;
+
+    import com.fasterxml.jackson.annotation.JsonProperty;
+
+    public class Greeting {
+
+        @JsonProperty
+        private String greeting;
+
+        public Greeting() {
+        }
+
+        public Greeting(String greeting) {
+            this.greeting = greeting;
+        }
+
+        public String getGreeting() {
+            return greeting;
+        }
+
+        @Override
+        public String toString() {
+            return "Greeting{" + "greeting=" + greeting + '}';
+        }
+
+    }
+    
     ```
 1. We will need to write a class that provides the web service.  Create a new file `DwOnAzure\src\main\java\com\dwonazure\resources\HelloResource.java with this code:
     ```Java
@@ -46,37 +80,6 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
         public Greeting getJSONGreeting() {
             return new Greeting("Hello world!");
         }
-    }
-    
-    ```
-
-1. Create the greeting object that the service will return.  Create `DwOnAzure\src\main\java\com\dwonazure\core\Greeting.java` with this code:
-    ```Java
-    package com.dwonazure.core;
-
-    import com.fasterxml.jackson.annotation.JsonProperty;
-
-    public class Greeting {
-
-        @JsonProperty
-        private String greeting;
-
-        public Greeting() {
-        }
-
-        public Greeting(String greeting) {
-            this.greeting = greeting;
-        }
-
-        public String getGreeting() {
-            return greeting;
-        }
-
-        @Override
-        public String toString() {
-            return "Greeting{" + "greeting=" + greeting + '}';
-        }
-
     }
     
     ```
@@ -139,7 +142,10 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
     ```
 1. To test the application, use this curl command: `curl http://localhost:8083/hello`.  THis will show that our configuration is working properly.
 
-1. Lets deploy this application to an Azure API app.  We will be using the kudu interface, but you can upload your application using FTP or webdeploy as well. To configure the Azure API app, we will first need a web.config file.  Create that file in our `DWOnAzure` directory, and add this content:
+## Create an API App in Azure
+
+1. Lets deploy this application to an Azure API app.  We will be using the kudu interface, but you can upload your application using FTP or webdeploy instead if you would rather. To configure the Azure API app, we will first need a web.config file.  Create that file in our `DWOnAzure` directory, and add this content:
+
     ```XML
     <?xml version="1.0" encoding="UTF-8"?>
     <configuration>
@@ -153,7 +159,9 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
     </system.webServer>
     </configuration>    
     ```
-    This will tell the Azure API App service environment to run our jar application rather than Tomcat or another servlet engine.  This is because DropWizard packages Jetty and all other necessary components in the application jar file.
+
+    This will tell the Azure API App service to run our jar application rather than Tomcat or another servlet engine.  This is because DropWizard packages Jetty and all other necessary components in the application jar file.
+
 1. In the Azure portal, create a resource group to contain your API app. Open the Resource group blade by clicking `Resource groups`:
     ![image](./media/2016-11-15_12-33-25.png)
 
@@ -189,7 +197,8 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
     
     ![image](./media/2016-11-15_12-59-47.png)
 
-    Click `Overview` in the app service blade, and click `browse`:
+## Create an API App in Azure
+1. In the App Service blade, Click `Overview` and then click `browse`:
 
     ![image](./media/2016-11-15_12-48-35.png)
 
@@ -211,7 +220,7 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
 
     And then click on `wwwroot`.  Next, open up your development directory in a file explorer, and drag the `config.yml`, DWOnAzure-1.0-SNAPSHOT.jar, and web.config` onto the webapps directory in the browser.
 
-    Go back to the API App blade in the Azure portal and click restart.  Wait 3-5 minutes for the restart, then test the application using (eg.) curl:
+1. Go back to the API App blade in the Azure portal and click restart.  Wait 3-5 minutes for the restart, then test the application using (eg.) curl:
 
     ![image](./media/2016-11-15_13-41-14.png)
 
