@@ -166,36 +166,47 @@ DropWizard is a popular platform for implementing REST web services in Java.  Dr
     ![image](./media/2016-11-15_12-37-13.png)
 
     Click `refresh` in the resource group list blade, and then click the resource group that you just created.  In the resource group detail blade, click `+add`:
+    
     ![image](./media/2016-11-15_12-40-06.png)
 
     In the blade that comes up, type `API App` in the search box, and choose `API App`:
+    
     ![image](./media/2016-11-15_12-41-15.png)
 
     Click `Create` in the API App blade.  Give the app a name, and choose the subscription, resource group and app service plan to use for the API app.  We will configure Application Insights later, so leave it off for now:
+    
     ![image](./media/2016-11-15_12-45-29.png)
 
 1. Back in the resource group blade, click `refresh` and we should see our new API app:
+    
     ![image](./media/2016-11-15_12-47-07.png)
 
     Click on the app, and in the App Service blade that comes up, click on `Application settings`:
+    
     ![image](./media/2016-11-15_12-57-55.png)
 
     Set the Java version to `Java 8`, the Java Minor Version to `Newest`, and the Web Container to `Newest Tomcat 8.5` (although we will not be using Tomcat here).  Click Save.
+    
     ![image](./media/2016-11-15_12-59-47.png)
 
     Click `Overview` in the app service blade, and click `browse`:
+
     ![image](./media/2016-11-15_12-48-35.png)
 
     This should bring up the default page:
+
     ![image](./media/2016-11-15_12-50-33.png)
 
     In the browser url, add `.scm` before `.azurewebsites.net`, and hit enter.  You should now see the `Kudu` console:
+
     ![image](./media/2016-11-15_12-52-54.png)
 
     Click `Debug console` and choose `CMD`:
+
     ![image](./media/2016-11-15_12-54-40.png)
 
     In the page that comes up, click on `site`
+
     ![image](./media/2016-11-15_12-56-18.png)
 
     And then click on `wwwroot`.  Next, open up your development directory in a file explorer, and drag the `config.yml`, DWOnAzure-1.0-SNAPSHOT.jar, and web.config` onto the webapps directory in the browser.
