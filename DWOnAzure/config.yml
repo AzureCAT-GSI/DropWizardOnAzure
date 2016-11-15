@@ -1,0 +1,9 @@
+logging:
+  level: INFO
+  loggers:
+    com.dwonazure: DEBUG
+
+server:
+  applicationConnectors:
+  - type: http
+    port: !!int ${HTTP_PLATFORM_PORT}
